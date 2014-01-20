@@ -11,7 +11,11 @@ from django.views import generic
 @transaction.atomic
 def atomic(request,save=False):
     
-    
+    try:
+        for o in User.objects.all():
+            o.delete()
+    except:
+        pass
     error=False
     user1=User(name="deen")
     user2=User(name="deen")
