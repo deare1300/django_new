@@ -4,7 +4,7 @@ from django.db import transaction
 from django.http import HttpResponse
 
 from test_dj.models import User,Poll,Choice
-
+from django.shortcuts import render_to_response
 
 from django.views import generic 
 
@@ -70,11 +70,18 @@ def atomic(request,save=False):
 
 ## the generic views test here 
     
+
+def index(request):
+    latest_poll_list=Poll.objects.order_by('-pub_date')[:5]
+    return render_to_response('test_dj/index.html',{'latest_poll_list':latest_poll_list})
 class IndexView(generic.ListView):       
     template_name='test_dj/index.html'
     content_object_name='latest_poll_list'
     def get_queryset(self):
-        return Poll.objects.order_by('-pub_date')[:5]
+        objs=Poll.objects.order_by('-pub_date')[:2]
+        for obj in objs:
+            print obj.question,obj.pub_date
+        return Poll.objects.order_by('-pub_date')[:2]
     
 class DetailView(generic.DetailView):
     model=Poll
