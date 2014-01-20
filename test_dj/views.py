@@ -3,7 +3,10 @@ from django.db import transaction
 # Create your views here.
 from django.http import HttpResponse
 
-from test_dj.models import User
+from test_dj.models import User,Poll,Choice
+
+
+from django.views import generic 
 
 @transaction.atomic
 def atomic(request,save=False):
@@ -64,5 +67,15 @@ def atomic(request,save=False):
 
 
 
+
+## the generic views test here 
     
-        
+class IndexView(generic.ListView):       
+    template_name='test_dj/index.html'
+    content_object_name='latest_poll_list'
+    def get_queryset(self):
+        return Poll.objects.order_by('-pub_date')[:5]
+    
+class DetailView(generic.DetailView):
+    model=Poll
+    template_name='test_dj/detail.html' 
